@@ -1,0 +1,23 @@
+{
+  "name": "rest-manager",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isBucky/Rest-Manager.git"
+  },
+  "keywords": [],
+  "author": "@bucky.br",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/isBucky/Rest-Manager/issues"
+  },
+  "homepage": "https://github.com/isBucky/Rest-Manager#readme",
+  "dependencies": {
+    "bucky.js": "latest",
+  },
+  "engines": {
+    "node": ">=16.6.0",
+    "npm": ">=7.0.0"
+  }
+}
