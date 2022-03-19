@@ -10,3 +10,24 @@
 </div>
 
 ---
+
+# Fazendo a instalação:
+~~~sh
+# Usando npm:
+npm install rest-manager --save
+
+# Usando yarn:
+yarn add rest-manager
+~~~
+
+# Configurando o gerenciador de requisições:
+~~~javascript
+/**
+ * Você também pode usar a função 'require', para fazer a importação.
+ * @example
+ * ```js
+ * const RestManager = require('rest-manager');
+ * ```
+ */
+import RestManager from 'rest-manager';
+~~~
