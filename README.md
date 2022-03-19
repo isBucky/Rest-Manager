@@ -11,23 +11,17 @@
 
 ---
 
-# Fazendo a instalação:
+# Installation:
 ~~~sh
-# Usando npm:
+# Using npm:
 npm install rest-manager --save
 
-# Usando yarn:
+# Using yarn:
 yarn add rest-manager
 ~~~
 
-# Configurando o gerenciador de requisições:
+# Configuring the rest manager:
 ~~~javascript
-/**
- * Você também pode usar a função 'require', para fazer a importação.
- * @example
- * ```js
- * const RestManager = require('rest-manager');
- * ```
- */
+// Supports ES6 and CommonJs on import.
 import RestManager from 'rest-manager';
 ~~~
