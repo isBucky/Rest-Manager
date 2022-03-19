@@ -4,24 +4,26 @@ const { isURL, isDirectory, isEmptyDirectory } = require('bucky.js'),
   path = require('node:path');
   
 /**
- * Class used to configure rest-manager.
+ * Rest manager constructor class.
  * @class RestManager
  */
 class RestManager {
   /**
-   * Use to configure rest-manager.
+   * Use to configure your rest manager configuration.
    * 
    * @params {Object} [options] Settings options.
-   * @params {String} [options.endpoint]
-   * @params {String} [options.framework]
-   * @params {Function} [options.request]
-   * @params {Object} [options.headers]
-   * @params {Array} [options.methods]
+   * @params {String} [options.baseURL] Where does the URL begin.
+   * @params {String} [options.framework] What kind of lib/framework do you want to use.
+   * @params {Function} [options.request] Use this function to define what the request will look like.
+   * @params {Object} [options.headers] Header configuration.
+   * @params {Array} [options.methods] What methods are possible to use in request.
    * 
-   * @returns {Object}
+   * @returns {Object} Returns the rest manager's constructor class.
+   * 
+   * To find out read the readme {@link README.md}
    */
   constructor(options) {
-    if (!('endpoint' in options) || !isURL(options?.endpoint)) throw new Error('You have not defined a valid base URL!');
+    if (!('baseURL' in options) || !isURL(options?.baseURL)) throw new Error('You have not defined a valid base URL!');
     
     if (!('framework' in options) || !options.framework) throw new Error('You haven\'t defined a valid framework!');
     if (!isDirectory(path.resolve(__dirname, '..', options.framework)) ||
@@ -34,49 +36,58 @@ class RestManager {
   }
   
   /**
+   * Function used to build the routes.
    * 
-   * @param {Object} [options]
-   * @param {String} [framework]
-   * @returns {Function<object>}
+   * @param {Object} [options] Options defined in the class's constructor.
+   * @param {String} [framework] Lib/framework defined in settings options.
+   * 
+   * @returns {Function<object>} Returns a function with values 
    */
   builderRouter(options, framework) {
     return Object.defineProperties(function Router() {}, {
       /**
-       * 
-       * @type {Syring}
+       * This is the base URL, where to start the requests.
+       * @type {String}
        */
-      endpoint: { value: new URL(options.endpoint).origin, enumerable: true },
+      baseURL: { value: new URL(options.baseURL).origin, enumerable: true },
       
       /**
+       * Use to get the current URL.
        * 
+       * @type {Getter}
+       * @returns {String}
+       */
+      currentURL: {
+        get: () => `${this.baseURL}/${this.routes.join('/')}`.split('/?').join('?'),
+        enumerable: true
+      },
+      
+      /**
+       * Here all the selected routes will be listed.
        * @type {Array}
        */
       routes: { value: [], enumerable: true },
       resolveResquest: { value: this.resolveResquest },
       
       /**
-       * 
+       * Headers you defined for your application.
        * @type {Object}
        */
       headers: { value: options.headers ?? {} },
       
       /**
-       * 
+       * Function you defined for a modified request.
        * @type {Function}
        */
       request: { value: options.request },
       handler: { value: this.handler },
       
       /**
-       * 
+       * lib/framework that you defined to make the requests.
        * @type {String}
        */
       framework: { value: framework },
       
-      /**
-       * 
-       * @type {Array}
-       */
       reflectors: {
         value: [
           'toString', 'valueOf',
@@ -87,7 +98,7 @@ class RestManager {
       },
       
       /**
-       * 
+       * Configured or default request methods.
        * @type {Array}
        */
       methods: {
@@ -101,7 +112,7 @@ class RestManager {
   }
   
   /**
-   * 
+   * Function used to handle the routes.
    * @returns {Object}
    * @readonly
    */
@@ -109,7 +120,7 @@ class RestManager {
     return {
       get(target, key) {
         if (target?.[key]) return target[key];
-        if (target.reflectors.includes(key)) return () => `${target.endpoint}/${target.routes.join('/')}`.split('/?').join('?');
+        if (target.reflectors.includes(key)) return () => target.currentURL;
         if (target.methods.includes(key)) return target.resolveResquest(target, key);
         
         target.routes.push(key);
@@ -120,7 +131,7 @@ class RestManager {
         args.filter(Boolean).forEach((data, index) => {
           let isObject = typeof data == 'object';
           if (isObject && index == 0) return target.routes.push('?' + new URLSearchParams(data).toString());
-          if (isObject && index > 0) return;
+          else return;
           
           return Array.isArray(data)
             ? target.routes.push(...data)
@@ -133,24 +144,27 @@ class RestManager {
   }
   
   /**
+   * Function used to resolve the final request.
    * 
-   * @param {Object} [target]
-   * @param {String} [method]
-   * @returns {Function}
+   * @param {Object} [target]Object returned from buildeRouter function
+   * @param {String} [method] Request method.
+   * @returns {Function} Returns a function that can be passed other parameters of the request.
    */
   resolveResquest(target, method) {
-    let
-      url = `${target.endpoint}/${target.routes.join('/')}`.split('/?').join('?'),
-      headers = target.headers;
-      
     return !target.request
       ? (data) => {
         if (typeof data == 'object' && ('headers' in data)) Object.assign(headers, data.headers);
         if (data?.headers) delete data.headers;
-        return target.framework({ url, method, headers, ...data });
+        return target.framework({
+          url: target.currentURL,
+          headers: target.headers,
+          method, ...data
+        });
       }
       
-      : (data) => target.request(target.framework, method, url, data);
+      : (data) => target.request(
+        target.framework, target.currentURL,
+        method, target.headers, data);
   }
 }
 
