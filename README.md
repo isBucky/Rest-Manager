@@ -20,8 +20,23 @@ npm install rest-manager --save
 yarn add rest-manager
 ~~~
 
-# Configuring the rest manager:
+# Introduction:
 ~~~javascript
 // Supports ES6 and CommonJs on import.
 import RestManager from 'rest-manager';
+
+const RestClient = new RestManager({
+  framework: 'axios',
+  baseURL: 'http://localhost:3000/api',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'password123'
+  },
+  methods: ['get', 'post']
+});
+
+(async() => {
+  let { data } = await RestClient.users({ id: 5 }).get();
+  return console.log(data);
+})();
 ~~~
