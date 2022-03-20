@@ -1,13 +1,16 @@
 {
   "name": "rest-manager",
-  "description": "",
   "version": "1.0.1",
+  "description": "A framework in order to facilitate/handle requests to a URL in an easy way.",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/isBucky/Rest-Manager.git"
   },
-  "keywords": [],
+  "keywords": [
+    "rest", "manager",
+    "requests", "fetch"
+  ],
   "author": "@bucky.br",
   "license": "Apache-2.0",
   "bugs": {
