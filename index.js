@@ -133,7 +133,7 @@ class RestManager {
         args.filter(Boolean).forEach((data, index) => {
           let isObject = typeof data == 'object';
           if (isObject && index == 0) return target.routes.push('?' + new URLSearchParams(data).toString());
-          else return;
+          if (isObject && index > 0) return;
           
           return Array.isArray(data)
             ? target.routes.push(...data)
@@ -153,19 +153,20 @@ class RestManager {
    * @returns {Function} Returns a function that can be passed other parameters of the request.
    */
   resolveResquest(target, method) {
+    let url = target.currentURL;
+    if (target.routes.length) target.routes.splice(0);
+    
     return !target.request
       ? (data) => {
         if (typeof data == 'object' && ('headers' in data)) Object.assign(headers, data.headers);
         if (data?.headers) delete data.headers;
         return target.framework({
-          url: target.currentURL,
-          headers: target.headers,
+          url, headers: target.headers,
           method, ...data
         });
       }
       
-      : (data) => target.request(
-        target.framework, target.currentURL,
+      : (data) => target.request(target.framework, url,
         method, target.headers, data);
   }
 }
