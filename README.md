@@ -85,7 +85,9 @@ const client = new RestManager({
 })();
 ~~~
 
-### You can also include queries in the URL using objects:
+### Including queries:
+> **To include queries in requests, just use objects:**
+
 ~~~javascript
 (async() => {
   // Get: http://localhost:3000/api/users?id=5
@@ -94,7 +96,9 @@ const client = new RestManager({
 })();
 ~~~
 
-### You can also include values in the URL using parentheses:
+### External values:
+> **You can add external values using parentheses:**
+
 ~~~javascript
 (async() => {
   // Get: http://localhost:3000/api/users/5
@@ -103,7 +107,9 @@ const client = new RestManager({
 })();
 ~~~
 
-### You can add some more information at the time of request:
+### Adding more options:
+> **You can set more options at request time, passing an object in the request method:**
+
 ~~~javascript
 (async() => {
   // Post: http://localhost:3000/api/newUser
