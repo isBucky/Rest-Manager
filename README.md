@@ -43,7 +43,7 @@ const RestClient = new RestManager({
 })();
 ~~~
 
-# [Client Settings Options:](./index.js#L25)
+# [Client settings options](./index.js#L25):
 ~~~javascript
 const client = new RestManager({
   // Here it will be defined which lib/framework you will use to make the request.
@@ -67,7 +67,50 @@ const client = new RestManager({
   /**
    * You can use this function to manage your request.
    * You will only use this function if your chosen lib/framework is not compatible with the axios or node-fetch request settings.
+   * This function is called before executing the request.
    */
   request(framework, url, method, headers, data) {/*...*/}
 });
+~~~
+
+# Making requests:
+**Para fazer as requisições tem vários jeitos, por exemplo:**
+
+### Fazer um simples get:
+~~~javascript
+(async() => {
+  // Get: http://localhost:3000/api/users
+  let { data } = await RestClient.users.get();
+  return console.log(data);
+})();
+~~~
+
+### Você também pode incluir querys na URL usando objetos:
+~~~javascript
+(async() => {
+  // Get: http://localhost:3000/api/users?id=5
+  let { data } = await RestClient.users({ id: 5 }).get();
+  return console.log(data);
+})();
+~~~
+
+### Também da para incluir valores na url usando parênteses:
+~~~javascript
+(async() => {
+  // Get: http://localhost:3000/api/users/5
+  let { data } = await RestClient.users(5).get();
+  return console.log(data);
+})();
+~~~
+
+### Você pode adicionar mais algumas informações na hora da requisição:
+~~~javascript
+(async() => {
+  // Post: http://localhost:3000/api/newUser
+  let { data } = await RestClient.newUser.post({
+    data: { /*...*/ }
+  });
+  
+  return console.log(data);
+})();
 ~~~
