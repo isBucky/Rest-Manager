@@ -81,6 +81,7 @@ const client = new RestManager({
 (async() => {
   // Get: http://localhost:3000/api/users
   let { data } = await RestClient.users.get();
+  
   return console.log(data);
 })();
 ~~~
@@ -92,6 +93,7 @@ const client = new RestManager({
 (async() => {
   // Get: http://localhost:3000/api/users?id=5
   let { data } = await RestClient.users({ id: 5 }).get();
+  
   return console.log(data);
 })();
 ~~~
@@ -102,7 +104,9 @@ const client = new RestManager({
 ~~~javascript
 (async() => {
   // Get: http://localhost:3000/api/users/5
-  let { data } = await RestClient.users(5).get();
+  let userId = 5,
+    { data } = await RestClient.users(userId).get();
+    
   return console.log(data);
 })();
 ~~~
