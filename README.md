@@ -74,9 +74,9 @@ const client = new RestManager({
 ~~~
 
 # Making requests:
-**Para fazer as requisições tem vários jeitos, por exemplo:**
+> **There are several ways to make requests, for example:**
 
-### Fazer um simples get:
+### Do a simple get:
 ~~~javascript
 (async() => {
   // Get: http://localhost:3000/api/users
@@ -85,7 +85,7 @@ const client = new RestManager({
 })();
 ~~~
 
-### Você também pode incluir querys na URL usando objetos:
+### You can also include queries in the URL using objects:
 ~~~javascript
 (async() => {
   // Get: http://localhost:3000/api/users?id=5
@@ -94,7 +94,7 @@ const client = new RestManager({
 })();
 ~~~
 
-### Também da para incluir valores na url usando parênteses:
+### You can also include values in the URL using parentheses:
 ~~~javascript
 (async() => {
   // Get: http://localhost:3000/api/users/5
@@ -103,11 +103,12 @@ const client = new RestManager({
 })();
 ~~~
 
-### Você pode adicionar mais algumas informações na hora da requisição:
+### You can add some more information at the time of request:
 ~~~javascript
 (async() => {
   // Post: http://localhost:3000/api/newUser
   let { data } = await RestClient.newUser.post({
+    headers: { /*...*/ },
     data: { /*...*/ }
   });
   
