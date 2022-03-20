@@ -25,6 +25,7 @@ yarn add rest-manager
 // Supports ES6 and CommonJs on import.
 import RestManager from 'rest-manager';
 
+// Configuring client.
 const RestClient = new RestManager({
   framework: 'axios',
   baseURL: 'http://localhost:3000/api',
@@ -36,7 +37,37 @@ const RestClient = new RestManager({
 });
 
 (async() => {
+  // Get: http://localhost:3000/api/users?id=5
   let { data } = await RestClient.users({ id: 5 }).get();
   return console.log(data);
 })();
+~~~
+
+# [Client Settings Options:](./index.js#L25)
+~~~javascript
+const client = new RestManager({
+  // Here it will be defined which lib/framework you will use to make the request.
+  framework: 'axios',
+  
+  // This will be the base URL for making requests.
+  baseURL: 'http://localhost:3000/api',
+  
+  // Here will be the headers of your request.
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: '123'
+  },
+  
+  /**
+   * Here you can configure which request methods are available.
+   * By default comes the following methods: get, post, delete and put.
+   */
+  methods: [ 'get', 'post' ]
+  
+  /**
+   * You can use this function to manage your request.
+   * Você só usará está função, caso a sua lib/framework escolhida não é compatível com as configurações de requisições do axios ou node-fetch.
+   */
+  request(framework, url, method, headers, data) {/*...*/}
+});
 ~~~
