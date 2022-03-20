@@ -62,11 +62,11 @@ const client = new RestManager({
    * Here you can configure which request methods are available.
    * By default comes the following methods: get, post, delete and put.
    */
-  methods: [ 'get', 'post' ]
+  methods: [ 'get', 'post' ],
   
   /**
    * You can use this function to manage your request.
-   * Você só usará está função, caso a sua lib/framework escolhida não é compatível com as configurações de requisições do axios ou node-fetch.
+   * You will only use this function if your chosen lib/framework is not compatible with the axios or node-fetch request settings.
    */
   request(framework, url, method, headers, data) {/*...*/}
 });
