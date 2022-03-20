@@ -169,4 +169,3 @@ class RestManager {
 }
 
 module.exports = RestManager;
-exports.RestManager = RestManager;
