@@ -1,8 +1,5 @@
 'use strict';
 
-const { isURL, isDirectory, isEmptyDirectory } = require('bucky.js'),
-  path = require('node:path');
-  
 /**
  * Rest manager constructor class.
  * @class RestManager
@@ -23,14 +20,16 @@ class RestManager {
    * To find out read the readme {@link README.md}
    */
   constructor(options) {
-    if (!('baseURL' in options) || !isURL(options?.baseURL)) throw new Error('You have not defined a valid base URL!');
-    
+    if (!('baseURL' in options) || !this.isURL(options?.baseURL)) throw new Error('You have not defined a valid base URL!');
     if (!('framework' in options) || !options.framework) throw new Error('You haven\'t defined a valid framework!');
-    if (!isDirectory(path.resolve(__dirname, '..', options.framework)) ||
-      isEmptyDirectory(path.resolve(__dirname, '..', options.framework))) throw new Error(`The framework "${options.framework}" is not installed in this project!`);
-      
     if (('request' in options) && typeof options.request !== 'function') throw new Error('The "request" option is not a function!');
     
+    try { require(options.framework); }
+    catch(_) {
+      throw new Error(`The framework "${options.framework}" is not installed in this project!`);
+    }
+    
+
     let framework = require(options.framework);
     return new Proxy(this.builderRouter(options, framework), this.handler);
   }
@@ -168,6 +167,16 @@ class RestManager {
       
       : (data) => target.request(target.framework, url,
         method, target.headers, data);
+  }
+  
+  isURL(link) {
+    let result;
+    
+    if (typeof link !== 'string') return false;
+    try { result = new URL(link); }
+    catch (_) { return false; }
+    
+    return ['http:', 'https:'].includes(result.protocol);
   }
 }
 
