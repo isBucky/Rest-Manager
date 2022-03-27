@@ -1,6 +1,6 @@
 {
   "name": "rest-manager",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "A framework in order to facilitate/handle requests to a URL in an easy way.",
   "main": "index.js",
   "repository": {
@@ -11,15 +11,13 @@
     "rest", "manager",
     "requests", "fetch"
   ],
-  "author": "@bucky.br",
+  "author": "@isBucky",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/isBucky/Rest-Manager/issues"
   },
   "homepage": "https://github.com/isBucky/Rest-Manager#readme",
-  "dependencies": {
-    "bucky.js": "latest"
-  },
+  "dependencies": { },
   "engines": {
     "node": ">=16.6.0",
     "npm": ">=7.0.0"

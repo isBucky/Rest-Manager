@@ -21,17 +21,9 @@ class RestManager {
    */
   constructor(options) {
     if (!('baseURL' in options) || !this.isURL(options?.baseURL)) throw new Error('You have not defined a valid base URL!');
-    if (!('framework' in options) || !options.framework) throw new Error('You haven\'t defined a valid framework!');
-    if (('request' in options) && typeof options.request !== 'function') throw new Error('The "request" option is not a function!');
-    
-    try { require(options.framework); }
-    catch(_) {
-      throw new Error(`The framework "${options.framework}" is not installed in this project!`);
-    }
-    
-
-    let framework = require(options.framework);
-    return new Proxy(this.builderRouter(options, framework), this.handler);
+    if (!('framework' in options) || !options.framework) throw new Error('You haven\'t defined a valid framework, received:' + typeof options.framework);
+    if (('request' in options) && typeof options.request !== 'function') throw new Error('The "request" option is not a function, received:' + typeof options.request);
+    return new Proxy(this.builderRouter(options), this.handler);
   }
   
   /**
@@ -42,7 +34,7 @@ class RestManager {
    * 
    * @returns {Function<object>} Returns a function with values 
    */
-  builderRouter(options, framework) {
+  builderRouter(options) {
     return Object.defineProperties(function Router() {}, {
       /**
        * This is the base URL, where to start the requests.
@@ -87,7 +79,7 @@ class RestManager {
        * lib/framework that you defined to make the requests.
        * @type {String}
        */
-      framework: { value: framework },
+      framework: { value: options.framework },
       
       reflectors: {
         value: [

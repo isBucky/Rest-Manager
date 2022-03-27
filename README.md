@@ -24,10 +24,11 @@ yarn add rest-manager
 ~~~javascript
 // Supports ES6 and CommonJs on import.
 import RestManager from 'rest-manager';
+import axios from 'axios';
 
 // Configuring client.
 const RestClient = new RestManager({
-  framework: 'axios',
+  framework: axios,
   baseURL: 'http://localhost:3000/api',
   headers: {
     'Content-Type': 'application/json',
@@ -47,7 +48,7 @@ const RestClient = new RestManager({
 ~~~javascript
 const client = new RestManager({
   // Here it will be defined which lib/framework you will use to make the request.
-  framework: 'axios',
+  framework: '',
   
   // This will be the base URL for making requests.
   baseURL: 'http://localhost:3000/api',
