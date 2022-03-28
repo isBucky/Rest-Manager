@@ -44,7 +44,7 @@ class RestManager {
         value: new URL(options.baseURL).origin
           + new URL(options.baseURL).pathname.replace(/\/\//gi, '')
           + (new URL(options.baseURL).searchParams.toString().length
-            ? `?${new URL(options.baseURL).searchParams.toString()}` : '');,
+            ? `?${new URL(options.baseURL).searchParams.toString()}` : ''),
         enumerable: true
       },
       
