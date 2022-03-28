@@ -40,7 +40,12 @@ class RestManager {
        * This is the base URL, where to start the requests.
        * @type {String}
        */
-      baseURL: { value: new URL(options.baseURL).origin, enumerable: true },
+      baseURL: {
+        value: options.baseURL.at(-1) == '/'
+          ? options.baseURL.slice(0, -);
+          : options.baseURL,
+        enumerable: true
+      },
       
       /**
        * Use to get the current URL.
