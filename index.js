@@ -56,7 +56,7 @@ class RestManager {
        */
       currentURL: {
         get: function CurrentURL() {
-          return `${this.baseURL}/${this.routes.join('/')}`.split('/?').join('?');
+          return `${this.baseURL + this.routes.join('/')}`.split('/?').join('?');
         },
         enumerable: true
       },
