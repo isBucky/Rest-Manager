@@ -1,26 +1,40 @@
 {
-  "name": "rest-manager",
-  "version": "1.1.2",
-  "description": "A framework in order to facilitate/handle requests to a URL in an easy way.",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/isBucky/Rest-Manager.git"
-  },
-  "keywords": [
-    "rest",
-    "manager",
-    "requests",
-    "fetch"
-  ],
-  "author": "@isBucky",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/isBucky/Rest-Manager/issues"
-  },
-  "homepage": "https://github.com/isBucky/Rest-Manager#readme",
-  "dependencies": {},
-  "engines": {
-    "node": ">=17.5.0"
-  }
+    "name": "rest-manager",
+    "version": "1.1.3",
+    "description": "A framework in order to facilitate/handle requests to a URL in an easy way.",
+    "main": "dist/index.js",
+    "types": "dist/types",
+    "scripts": {
+        "build": "tsc",
+        "rebuild": "rm -rf dist && tsc",
+        "dev": "tsx index.ts"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/isBucky/Rest-Manager.git"
+    },
+    "keywords": [
+        "rest",
+        "manager",
+        "requests",
+        "fetch"
+    ],
+    "author": {
+        "name": "bucky",
+        "email": "bucky.developer@gmail.com",
+        "url": "https://github.com/isBucky"
+    },
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/isBucky/Rest-Manager/issues"
+    },
+    "homepage": "https://github.com/isBucky/Rest-Manager#readme",
+    "engines": {
+        "node": ">=17.5.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.2.5",
+        "tsx": "^3.12.7",
+        "typescript": "^5.1.3"
+    }
 }

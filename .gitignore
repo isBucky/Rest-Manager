@@ -33,3 +33,4 @@ jspm_packages/
 .env.test
 .lock
 *.sh
+/dist
