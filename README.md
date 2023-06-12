@@ -1,6 +1,6 @@
-<div style="display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 5px">
+<div align="center">
     <h1 style="font-weight: 600">Rest-Manager</h1>
-    <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px;">
+    <div>
         <a href="https://www.npmjs.com/package/rest-manager">
             <img src="https://img.shields.io/npm/v/rest-manager?style=flat-square&maxAge=3600" alt="NPM version" />
         </a>
