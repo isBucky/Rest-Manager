@@ -95,17 +95,14 @@ function isUrl(link: string) {
 }
 
 async function request(router: Router, method: string, data: any) {
-    if (!router.framework) {
-        let bodyRequest: any = { method, headers: router.headers ?? {} };
-        if (data && typeof data == 'object' && data?.headers) {
-            Object.assign(bodyRequest.headers, data);
-            delete data.headers;
-        }
-
-        return fetch(router.url, Object.assign(bodyRequest, { ...(bodyRequest ?? {}) }));
+    let headers: any = router.headers ?? {};
+    if (data && typeof data == 'object' && data?.headers) {
+        Object.assign(headers, data);
+        delete data.headers;
     }
 
-    return await router.framework.request(router, method, data);
+    if (!router.framework) return fetch(router.url, { method, headers, ...(data ?? {}) });
+    return await router.framework.request(router, method, { headers, ...(data ?? {}) });
 }
 
 export interface Framework {
