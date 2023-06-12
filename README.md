@@ -49,7 +49,7 @@ const RestClient = RestManager({
 })();
 ~~~
 
-# [Client settings options](./index.js#L25):
+# [Client settings options](./index.ts#L105):
 ~~~javascript
 const client = RestManager({
     // This will be the base URL for making requests.
