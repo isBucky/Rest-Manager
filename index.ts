@@ -102,7 +102,7 @@ async function request(router: Router, method: string, data: any) {
             delete data.headers;
         }
 
-        return fetch(router.url, Object.assign(bodyRequest, { ...(data ?? {}) }));
+        return fetch(router.url, Object.assign(bodyRequest, { ...(bodyRequest ?? {}) }));
     }
 
     return await router.framework.request(router, method, data);
