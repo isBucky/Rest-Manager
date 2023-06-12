@@ -1,12 +1,9 @@
-export default function RestManager(options: RestManagerOptions): Router {
+function RestManager(options: RestManagerOptions): Router {
     if (!options?.baseUrl || !isUrl(options.baseUrl)) throw new Error('The baseurl property is required. Received: ' + typeof options.baseUrl);
-    if (options?.framework && !options.framework?.target) throw new Error('To use a third party framework, you must inform a target. Received: ' + typeof options.framework.target);
-    if (options?.framework && !options.framework?.request) throw new Error('To make a request with third party frameworks, you must inform a "Request" function. Received: ' + typeof options.framework.request);
     if (
-        options?.framework &&
-        options.framework?.request &&
-        typeof options.framework?.request !== 'function'
-    ) throw new Error('The "Request" property has to be a function. Recorded: ' + typeof options.framework.request);
+        options?.request &&
+        typeof options?.request !== 'function'
+    ) throw new Error('The "Request" property has to be a function. Received: ' + typeof options.request);
 
     const RouterFunction = () => { },
         handler = {
@@ -67,7 +64,7 @@ export default function RestManager(options: RestManagerOptions): Router {
             enumerable: true
         },
 
-        framework: { value: options?.framework ? options.framework : undefined },
+        request: { value: options.request },
         routes: { value: [], enumerable: true },
         params: { value: params, enumerable: true },
         headers: { value: options.headers ?? {} },
@@ -97,24 +94,20 @@ function isUrl(link: string) {
 async function request(router: Router, method: string, data: any) {
     let headers: any = router.headers ?? {};
     if (data && typeof data == 'object' && data?.headers) {
-        Object.assign(headers, data);
+        Object.assign(headers, data.headers ?? {});
         delete data.headers;
     }
 
-    if (!router.framework) return fetch(router.url, { method, headers, ...(data ?? {}) });
-    return await router.framework.request(router, method, { headers, ...(data ?? {}) });
-}
-
-export interface Framework {
-    target: any;
-    request: (router: Router, method: string, data: any) => any;
+    if (!router.request) return fetch(router.url, { method, headers, ...(data ?? {}) });
+    return router.request(router, method, { headers, ...(data ?? {}) });
 }
 
 export interface RestManagerOptions {
     baseUrl: string;
     headers?: object;
     methods?: string[];
-    framework?: Framework;
+    
+    request?: (router: Router, method: string, data: any) => any;
 }
 
 export type Router = {
@@ -139,6 +132,4 @@ export type Router = {
     put: (requestBody?: any) => Promise<any>;
     trace: (requestBody?: any) => Promise<any>;
     patch: (requestBody?: any) => Promise<any>;
-
-    framework?: Framework;
 } & { [key: string]: Router };
