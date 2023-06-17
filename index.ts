@@ -1,4 +1,4 @@
-export default class RestManager<K extends Methods> {
+export default class RestManager<K extends Methods = Methods> {
     static defaultMethods: Methods[] = [
         'get', 'head', 'post',
         'put', 'delete', 'connect',
