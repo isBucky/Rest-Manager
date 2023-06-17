@@ -93,7 +93,7 @@ Unpkg:
 - [x] Addition of endanipulatipoints to static URLs
 - [x] New Functions and Code refactored
 - [x] Standard requests using native fetch
-- [x] Mon of requests according to your taste
+- [x] Modify the requests according to your taste
 - [x] Support for third party libraries
 - [ ] CDN support
 
