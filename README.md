@@ -90,7 +90,7 @@ Unpkg:
 - [x] New documentation
 - [x] Bugs and errors correction
 - [x] Written in TypeScript with dynamic typing  
-- [x] Addition of endanipulatipoints to static URLs
+- [x] Addition of endpoint to static URLs
 - [x] New Functions and Code refactored
 - [x] Standard requests using native fetch
 - [x] Modify the requests according to your taste
@@ -110,10 +110,6 @@ import RestManager from 'rest-manager'
 const rest new RestManager(url: string, {
     // Use to define the request header
     headers?: object;
-
-    // Use to define which methods you will be able to use in the request
-    // Standard methods: get, head, post, put delete, connect, options, trace and patch
-    methods?: K[] | Methods[];
 
     // Use to manipulate the request, with it you can use third party libraries to make requests
     // By default we already use the native Nodejs fetch
@@ -175,10 +171,6 @@ const user = RestManager.create(url: string, {
     // Use to define the request header
     headers?: object;
 
-    // Use to define which methods will be possible to use in the request
-    // Standard methods: get, head, post, put delete, connect, options, trace and patch
-    methods?: K[] | Methods[];
-
     // Use it to handle the request, with it you can use third-party libraries to make requests
     // By default we already use NodeJs native Fetch
     request?: (url: string, method: Methods, data: any) => Promise<any> | any;
@@ -206,6 +198,8 @@ const user = api.createRouter('user', '/user');
     const userResponse = await user({ id: '123' }).get(),
         userData = await userResponse.json();
 
+    // http://localhost:8080/api/users
+    api.router.api.users;
     return console.log(userData);
 })();
 ```
