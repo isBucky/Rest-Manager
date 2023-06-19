@@ -110,7 +110,8 @@ function router(url: string, options: RestManagerOptions) {
     const handler = {
         get(target: any, key: string) {
             if (defaultMethods.includes(key as Methods)) return (data: any) => makeRequest(key as Methods, data, {
-                baseUrl, params, routes,
+                baseUrl, params,
+                routes: routes.splice(0),
                 headers: options.headers,
                 request: options.request
             });
