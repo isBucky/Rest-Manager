@@ -1,5 +1,3 @@
-import { isURL } from 'bucky.js';
-
 const defaultMethods: Methods[] = [
     'get', 'head', 'post',
     'put', 'delete', 'connect',
@@ -158,7 +156,15 @@ function formatURL(url: string) {
     return new URL(url).toString();
 }
 
-
+function isURL(link: string): boolean {
+    let result;
+    
+    if (typeof link !== 'string') return false;
+    try { result = new URL(link); }
+    catch (_) { return false; }
+    
+    return ['http:', 'https:'].includes(result.protocol);
+}
 
 export interface RequestOptions {
     baseUrl: string;
