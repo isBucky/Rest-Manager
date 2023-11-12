@@ -16,7 +16,6 @@ export default class RestManager {
 
     public routers: Map<string, RecursiveRouter>;
     public request: RestManagerOptions['request'];
-    public router: RecursiveRouter;
 
     constructor(baseUrl: string, options?: RestManagerOptions) {
         if (!baseUrl || !isURL(baseUrl)) throw new Error('You did not provide a valid URL');
@@ -30,8 +29,13 @@ export default class RestManager {
 
         this.routers = new Map();
         this.request = options?.request;
+    }
 
-        this.router = create(this.baseUrl, {
+    /**
+     * Use para fazer a requisição
+     */
+    public get router() {
+        return create(this.baseUrl, {
             headers: this.headers,
             request: this.request,
         });
@@ -50,7 +54,7 @@ export default class RestManager {
 
         this.routers.set(
             name,
-            router(this.baseUrl + path, {
+            create(this.baseUrl + path, {
                 headers:
                     headers && typeof headers === 'object'
                         ? Object.assign(this.headers, headers)
@@ -205,7 +209,9 @@ export type Methods =
     | 'patch';
 
 export type MethodsFunctions = {
-    [K in Methods]: <Body = RequestInit, Response = ResponseMethodFunction>(bodyRequest?: Body) => Promise<Response>;
+    [K in Methods]: <Body = RequestInit, Response = ResponseMethodFunction>(
+        bodyRequest?: Body
+    ) => Promise<Response>;
 };
 
 type ResponseMethodFunction = Response & {
