@@ -1,11 +1,17 @@
 const defaultMethods: Methods[] = [
-    'get', 'head', 'post',
-    'put', 'delete', 'connect',
-    'options', 'trace', 'patch'
+    'get',
+    'head',
+    'post',
+    'put',
+    'delete',
+    'connect',
+    'options',
+    'trace',
+    'patch',
 ];
 
 export default class RestManager {
-    public baseUrl: string
+    public baseUrl: string;
     public headers: object;
 
     public routers: Map<string, RecursiveRouter>;
@@ -14,18 +20,20 @@ export default class RestManager {
 
     constructor(baseUrl: string, options?: RestManagerOptions) {
         if (!baseUrl || !isURL(baseUrl)) throw new Error('You did not provide a valid URL');
-        if (options?.headers && typeof options.headers !== 'object') throw new Error('The header has to be the object type');
-        if (options?.request && typeof options.request !== 'function') throw new Error('The "Request" property has to be a function');
+        if (options?.headers && typeof options.headers !== 'object')
+            throw new Error('The header has to be the object type');
+        if (options?.request && typeof options.request !== 'function')
+            throw new Error('The "Request" property has to be a function');
 
         this.baseUrl = formatURL(baseUrl);
         this.headers = options?.headers || {};
 
         this.routers = new Map();
         this.request = options?.request;
-        
+
         this.router = create(this.baseUrl, {
             headers: this.headers,
-            request: this.request
+            request: this.request,
         });
     }
 
@@ -36,15 +44,20 @@ export default class RestManager {
      * @returns Object manipulator {@link https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Proxy Proxy}
      */
     public createRouter(name: string, path: string, headers?: object) {
-        if (!name || !name.length || this.routers.has(name)) throw new Error('You have not defined a name for the route or it already exits!');
+        if (!name || !name.length || this.routers.has(name))
+            throw new Error('You have not defined a name for the route or it already exits!');
         if (!path || !path.length) throw new Error('You have not defined the URL route!');
 
-        this.routers.set(name, router(this.baseUrl + path, {
-            headers: headers && typeof headers === 'object'
-                ? Object.assign(this.headers, headers)
-                : this.headers,
-            request: this.request
-        }));
+        this.routers.set(
+            name,
+            router(this.baseUrl + path, {
+                headers:
+                    headers && typeof headers === 'object'
+                        ? Object.assign(this.headers, headers)
+                        : this.headers,
+                request: this.request,
+            })
+        );
 
         return this.routers.get(name)!;
     }
@@ -76,7 +89,7 @@ export default class RestManager {
     public static create(url: string, options?: RestManagerOptions) {
         return router(url, {
             headers: options?.headers,
-            request: options?.request
+            request: options?.request,
         });
     }
 }
@@ -89,52 +102,54 @@ export default class RestManager {
 export function create(url: string, options?: RestManagerOptions) {
     return router(url, {
         headers: options?.headers,
-        request: options?.request
+        request: options?.request,
     });
 }
 
-function router(url: string, options: RestManagerOptions) {
+function router<Options extends RestManagerOptions>(url: string, options: Options) {
     if (!url || !isURL(url)) throw new Error('You did not provide a valid URL');
-    if (options?.headers && typeof options.headers !== 'object') throw new Error('The header has to be the object type');
-    if (options?.request && typeof options.request !== 'function') throw new Error('The "Request" property has to be a function');
+    if (options?.headers && typeof options.headers !== 'object')
+        throw new Error('The header has to be the object type');
+    if (options?.request && typeof options.request !== 'function')
+        throw new Error('The "Request" property has to be a function');
 
     const baseUrl = new URL(
-            new URL(formatURL(url)).origin +
-            new URL(formatURL(url)).pathname.replace(/\/\//gi, '')
+            new URL(formatURL(url)).origin + new URL(formatURL(url)).pathname.replace(/\/\//gi, '')
         ).toString(),
         params = new URL(formatURL(url)).searchParams,
         routes: string[] = [];
 
     const handler = {
         get(target: any, key: string) {
-            if (defaultMethods.includes(key as Methods)) return (data: any) => makeRequest(key as Methods, data, {
-                baseUrl, params,
-                routes: routes.splice(0),
-                headers: options.headers,
-                request: options.request
-            });
+            if (defaultMethods.includes(key as Methods))
+                return (data: any) =>
+                    makeRequest(key as Methods, data, {
+                        baseUrl,
+                        params,
+                        routes: routes.splice(0),
+                        headers: options.headers,
+                        request: options.request,
+                    });
 
             routes.push(key);
             return new Proxy<RecursiveRouter>(target, handler);
         },
 
         apply(target: any, _: unknown, args: any[]) {
-            args.filter(Boolean).forEach(data => {
+            args.filter(Boolean).forEach((data) => {
                 if (typeof data === 'object' && !Array.isArray(data)) {
                     for (let [key, value] of Object.entries(data)) params.append(key, value as any);
                     return;
                 }
 
-                Array.isArray(data)
-                    ? routes.push(...data)
-                    : routes.push(data);
+                Array.isArray(data) ? routes.push(...data) : routes.push(data);
             });
 
             return new Proxy<RecursiveRouter>(target, handler);
-        }
+        },
     };
 
-    return new Proxy<RecursiveRouter>((() => { }) as any, handler);
+    return new Proxy<RecursiveRouter>((() => {}) as any, handler);
 }
 
 async function makeRequest(method: Methods, data: any, options: RequestOptions) {
@@ -147,7 +162,8 @@ async function makeRequest(method: Methods, data: any, options: RequestOptions) 
         delete data.headers;
     }
 
-    if (!options?.request) return fetch(new URL(url).toString(), { method, headers, ...(data ?? {}) });
+    if (!options?.request)
+        return fetch(new URL(url).toString(), { method, headers, ...(data ?? {}) });
     return await options.request(url, method, { headers, ...(data ?? {}) });
 }
 
@@ -158,11 +174,14 @@ function formatURL(url: string) {
 
 function isURL(link: string): boolean {
     let result;
-    
+
     if (typeof link !== 'string') return false;
-    try { result = new URL(link); }
-    catch (_) { return false; }
-    
+    try {
+        result = new URL(link);
+    } catch (_) {
+        return false;
+    }
+
     return ['http:', 'https:'].includes(result.protocol);
 }
 
@@ -175,23 +194,29 @@ export interface RequestOptions {
 }
 
 export type Methods =
-    | 'get' | 'head'
-    | 'post' | 'put'
-    | 'delete' | 'connect'
-    | 'options' | 'trace'
+    | 'get'
+    | 'head'
+    | 'post'
+    | 'put'
+    | 'delete'
+    | 'connect'
+    | 'options'
+    | 'trace'
     | 'patch';
 
 export type MethodsFunctions = {
-    [K in Methods]: <Body = any, Response = any>(bodyRequest?: Body) => Promise<Response>
-}
+    [K in Methods]: <Body = RequestInit, Response = ResponseMethodFunction>(bodyRequest?: Body) => Promise<Response>;
+};
+
+type ResponseMethodFunction = Response & {
+    json: <T = any>() => Promise<T>;
+};
 
 export type RecursiveRouter = {
     (...args: any[]): RecursiveRouter;
-}
-    & { [k: string]: RecursiveRouter }
-    & MethodsFunctions;
+} & { [k: string]: RecursiveRouter } & MethodsFunctions;
 
 export interface RestManagerOptions {
     headers?: object;
-    request?: (url: string, method: Methods, data: any) => Promise<any> | any;
+    request?: (url: string, method: Methods, data: any) => Promise<any>;
 }
